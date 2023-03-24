@@ -1,0 +1,32 @@
+version: "3.5"
+services:
+  database:
+    image: mcr.microsoft.com/azure-sql-edge
+    container_name: many-to-one-database
+    environment:
+      ACCEPT_EULA: y
+      SA_PASSWORD: Many2One!
+      TZ: UTC
+    networks:
+      - many_to_one_db_net
+  sqlcmd:
+    image: mcr.microsoft.com/mssql-tools:latest
+    container_name: many-to-one-database-initial-setup
+    command: "/bin/bash /opt/init-database/init-database.sh"
+    stdin_open: true
+    volumes:
+      - ./init-database:/opt/init-database
+    networks:
+      - many_to_one_db_net
+  app:
+    image: maven
+    container_name: many-to-one-app
+    volumes:
+      - ./app:/opt/app
+    entrypoint: "sh /opt/app/build-and-run.sh"
+    networks:
+      - many_to_one_db_net
+
+networks:
+  many_to_one_db_net:
+    name: many_to_one_db_net

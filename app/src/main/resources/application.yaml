@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:sqlserver://many-to-one-database:1433;encrypt=false
+    username: SA
+    password: Many2One!
+  jpa:
+    show-sql: true
